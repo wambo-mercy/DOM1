@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    .cart-item {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .like-btn {
+      cursor: pointer;
+      color: grey;
+      font-size: 20px;
+    }
+    .like-btn.liked {
+      color: red;
+    }
+    .quantity-controls button {
+      padding: 5px 10px;
+      font-size: 16px;
+    }
+    .delete-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    #total-price {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🛒 Shopping Cart</h2>
+
+  <div class="cart-item">
+    <span class="item-name">Product 1</span>
+    <span class="price">$25.00</span>
+
+    <div class="quantity-controls">
+      <button class="minus-btn">–</button>
+      <span class="quantity">1</span>
+      <button class="plus-btn">+</button>
+    </div>
+
+    <span class="like-btn">❤️</span>
+    <button class="delete-btn">Delete</button>
+  </div>
+
+  <div class="cart-item">
+    <span class="item-name">Product 2</span>
+    <span class="price">$15.00</span>
+
+    <div class="quantity-controls">
+      <button class="minus-btn">–</button>
+      <span class="quantity">2</span>
+      <button class="plus-btn">+</button>
+    </div>
+
+    <span class="like-btn">❤️</span>
+    <button class="delete-btn">Delete</button>
+  </div>
+
+  <div id="total-price">Total: $0.00</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      updateTotal();
+
+      // Plus buttons
+      document.querySelectorAll(".plus-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          let qty = this.previousElementSibling;
+          qty.textContent = parseInt(qty.textContent) + 1;
+          updateTotal();
+        });
+      });
+
+      // Minus buttons
+      document.querySelectorAll(".minus-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          let qty = this.nextElementSibling;
+          let current = parseInt(qty.textContent);
+          if (current > 1) {
+            qty.textContent = current - 1;
+            updateTotal();
+          }
+        });
+      });
+
+      // Delete buttons
+      document.querySelectorAll(".delete-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          this.closest(".cart-item").remove();
+          updateTotal();
+        });
+      });
+
+      // Like buttons
+      document.querySelectorAll(".like-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          this.classList.toggle("liked");
+        });
+      });
+    });
+
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll(".cart-item").forEach(function (item) {
+        const priceText = item.querySelector(".price").textContent.replace("$", "");
+        const price = parseFloat(priceText);
+        const qty = parseInt(item.querySelector(".quantity").textContent);
+        total += price * qty;
+      });
+      document.getElementById("total-price").textContent = "Total: $" + total.toFixed(2);
+    }
+  </script>
+
+</body>
+</html>
